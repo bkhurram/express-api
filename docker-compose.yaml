@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mongodb:
+    #image: "node:18"
+    image: mongo:latest
+    container_name: heros-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=heros
+      #- MONGO_INITDB_ROOT_USERNAME=admin
+      #- MONGO_INITDB_ROOT_PASSWORD=admin
+
+    volumes:
+      - mongodata:/data/db
+  node-express:
+    image: express-api:latest
+    container_name: express-api
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=production
+volumes:
+  mongodata:
+
