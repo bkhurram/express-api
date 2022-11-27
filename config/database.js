@@ -14,7 +14,7 @@ let database;
 async function connectToDatabase() {
 	const userConn = user && pass ? `${user}:${pass}@` : '';
 	const uriConnection = `${schema}${userConn}${host}${port ? ':' + port : ''}/?retryWrites=true&w=majority&serverSelectionTimeoutMS=2000&appName=express-api`
-	console.log(uriConnection);
+
 	const client = await MongoClient.connect(uriConnection);
 	// const client = await MongoClient.connect('mongodb://0.0.0.0:27017?directConnection=true&serverSelectionTimeoutMS=2000&appName=express-api');
 	// const client = await MongoClient.connect('mongodb://mongodb:27017?directConnection=true&serverSelectionTimeoutMS=2000&appName=express-api');
