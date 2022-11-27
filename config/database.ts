@@ -1,5 +1,7 @@
-const mongodb = require('mongodb');
-require('dotenv').config();
+import { MongoClient, Db } from 'mongodb';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const schema = process.env.DB_SCHEMA || 'mongodb://';
 const user = process.env.DB_USER || '';
@@ -7,11 +9,9 @@ const pass = process.env.DB_PASS || '';
 const host = process.env.DB_HOST;
 const port = process.env.DB_PORT;
 
-const MongoClient = mongodb.MongoClient;
+let database: Db;
 
-let database;
-
-async function connectToDatabase() {
+export const connectToDatabase = async () => {
 	const userConn = user && pass ? `${user}:${pass}@` : '';
 	const uriConnection = `${schema}${userConn}${host}${port ? ':' + port : ''}/?retryWrites=true&w=majority&serverSelectionTimeoutMS=2000&appName=express-api`
 
@@ -21,14 +21,12 @@ async function connectToDatabase() {
 	database = client.db('test');
 }
 
-function getDb() {
+export const getDb = () => {
 	if (!database) {
 		throw { message: 'Database not connected!' };
 	}
+
 	return database;
 }
 
-module.exports = {
-	connectToDatabase: connectToDatabase,
-	getDb: getDb,
-};
+export default { connectToDatabase, getDb };

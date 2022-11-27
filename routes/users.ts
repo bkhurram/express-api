@@ -1,7 +1,7 @@
-const express = require('express');
-const { body, validationResult } = require('express-validator');
-
-const UserService = require('../services/UserService');
+import express from 'express';
+import { body, validationResult } from 'express-validator';
+import UserService from '../services/UserService';
+import { NewUserType } from '../types/User';
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
 	var userService = new UserService();
 	var users = await userService.getAll();
+	console.info("Total users:", users.length);
 	res.json(users);
 });
 
@@ -31,11 +32,11 @@ router.post('/',
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const user = req.body;
+		const user:NewUserType = req.body;
 
 		var userService = new UserService();
 		userService.store(user);
 		res.json();
 	});
 
-module.exports = router;
+export default router;

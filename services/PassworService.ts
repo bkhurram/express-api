@@ -1,10 +1,10 @@
-const bcrypt = require("bcryptjs")
+import bcrypt from 'bcryptjs';
 
 const saltRounds = 10;
 // const passwordEnteredByUser = "mypass123"
 // const hash = "$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K"
 
-const passwordCompare = async (plainPassword, hashPassword) => {
+export const passwordCompare = async (plainPassword: string, hashPassword: string) => {
 
 	const isMatch = await bcrypt.compare(plainPassword, hashPassword);
 	if (!isMatch) {
@@ -15,7 +15,7 @@ const passwordCompare = async (plainPassword, hashPassword) => {
 
 }
 
-const passwordCrypt = async (password) => {
+export const passwordCrypt = async (password: string) => {
 
 	const salt = await bcrypt.genSalt(saltRounds);
 	const hash = await bcrypt.hash(password, salt);
@@ -24,9 +24,3 @@ const passwordCrypt = async (password) => {
 	return hash;
 	//$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
 }
-
-module.exports = {
-	passwordCompare,
-	passwordCrypt
-};
-

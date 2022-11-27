@@ -1,6 +1,7 @@
-var express = require('express');
-var router = express.Router();
-const client = require('../config/database');
+import express from 'express';
+import client from '../config/database';
+
+const router = express.Router();
 // const { MongoClient } = require('mongodb');
 // or as an es module:
 // import { MongoClient } from 'mongodb'
@@ -34,6 +35,6 @@ router.post('/', async (req, res) => {
 	res.json();
 });
 
-module.exports = router;
+export default router;
 
 
