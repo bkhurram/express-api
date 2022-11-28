@@ -1,7 +1,8 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
+import { HttpCode } from '../models/HttpCode';
 import UserService from '../services/UserService';
-import { NewUserType } from '../types/User';
+import { NewUserType, UserSignType } from '../types/User';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
 	res.json(users);
 });
 
-router.post('/',
+router.post('/signup',
 	body('password').isLength({ min: 5 }),
 	body('passwordConfirmation').custom((value, { req }) => {
 		if (value !== req.body.password) {
@@ -24,7 +25,7 @@ router.post('/',
 		return true;
 	}),
 
-	(req, res) => {
+	async (req, res) => {
 
 		// Finds the validation errors in this request and wraps them in an object with handy functions
 		const errors = validationResult(req);
@@ -35,8 +36,23 @@ router.post('/',
 		const user:NewUserType = req.body;
 
 		var userService = new UserService();
-		userService.store(user);
-		res.json();
-	});
+		await userService.store(user);
+		res.status(HttpCode.CREATED).json({
+			message: "User Registered successfully"
+		});
+
+	}
+);
+
+router.post('/signin',
+	body('email').isEmail(),
+	body('password').isLength({ min: 5 }),
+	async (req, res) => {
+		const sign: UserSignType = req.body;
+		var userService = new UserService();
+		const signUserModel = await userService.signin(sign);
+		res.status(200).json(signUserModel);
+	}
+);
 
 export default router;

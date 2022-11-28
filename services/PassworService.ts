@@ -1,26 +1,26 @@
 import bcrypt from 'bcryptjs';
+import { AppError } from '../exceptions/AppError';
+import { HttpCode } from '../models/HttpCode';
 
 const saltRounds = 10;
-// const passwordEnteredByUser = "mypass123"
-// const hash = "$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K"
 
-export const passwordCompare = async (plainPassword: string, hashPassword: string) => {
-
-	const isMatch = await bcrypt.compare(plainPassword, hashPassword);
+export const passwordCompare = (plainPassword: string, hashPassword: string) => {
+	const isMatch = bcrypt.compareSync(plainPassword, hashPassword);
 	if (!isMatch) {
-		console.log("Password doesn't match!")
+		console.info("Password doesn't match!")
+		throw new AppError({
+				httpCode: HttpCode.UNAUTHORIZED,
+				description: 'invalid credentials',
+			});
 	} else {
-		console.log("Password matches!")
+		console.info("Password matches!")
 	}
-
 }
 
-export const passwordCrypt = async (password: string) => {
-
-	const salt = await bcrypt.genSalt(saltRounds);
-	const hash = await bcrypt.hash(password, salt);
+export const passwordCrypt = (password: string) => {
+	const salt = bcrypt.genSaltSync(saltRounds);
+	const hash = bcrypt.hashSync(password, salt);
 	console.log(hash)
 
 	return hash;
-	//$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
 }

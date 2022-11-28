@@ -1,12 +1,16 @@
 export interface UserType {
-	userid: string;
+	email: string;
 	name: string;
 	surname: string;
 	birthday: Date;
-	email: string;
 }
 
 export interface NewUserType extends UserType {
 	password: string;
 	passwordConfirmation?: string;
+}
+
+export interface UserSignType {
+	email: string;
+	password: string;
 }

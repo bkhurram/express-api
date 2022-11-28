@@ -1,38 +1,28 @@
-import express from 'express';
-import client from '../config/database';
+import { Router } from 'express';
+import { HttpCode } from '../models/HttpCode';
+import BookService from '../services/BookService';
+import { BookType } from '../types/Book';
+import verifyToken from '../middleware/verifyToken';
+import { CustomRequest } from '../types/CustomRequest';
 
-const router = express.Router();
-// const { MongoClient } = require('mongodb');
-// or as an es module:
-// import { MongoClient } from 'mongodb'
+const router = Router();
 
-// Connection URL
-// const url = 'mongodb://0.0.0.0:27017?directConnection=true&serverSelectionTimeoutMS=2000&appName=express-api';
-// const client = new MongoClient(url);
+router.get('/', verifyToken, async (req:CustomRequest, res) => {
 
-// let books = [];
+	if (req.user === undefined) {
+		res.status(403).send({ message: "Unauthorised access" });
+	}
 
-router.get('/', async (req, res) => {
-	const db = client.getDb();
-	const collection = db.collection('books');
-
-	const findResult = await collection.find({}).toArray();
-	console.log('Found documents =>', findResult);
-
-	res.json(findResult);
+	const bookService = new BookService();
+	const books = await bookService.getAll();
+	res.json(books);
 });
 
 router.post('/', async (req, res) => {
-	const book = req.body;
-
-	// console.log(book);
-	// books.push(book);
-
-	const db = client.getDb();
-	const collection = db.collection('books');
-	await collection.insertOne(book);
-
-	res.json();
+	const book: BookType = req.body;
+	const bookService = new BookService();
+	await bookService.store(book);
+	res.status(HttpCode.CREATED).json();
 });
 
 export default router;

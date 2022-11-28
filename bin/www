@@ -27,13 +27,16 @@ app.set('port', port);
  * Listen on provided port, on all network interfaces.
  */
 
-db.connectToDatabase().then(function () {
-	app.listen(port, (err) => {
-		if (err) console.log("Error in server setup")
+(async () => {
+	await db.connectToDatabase();
+})();
 
-		console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
-	});
+app.listen(port, (err) => {
+	if (err) console.log("Error in server setup")
+
+	console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
+
 
 /**
  * Normalize a port into a number, string, or false.
