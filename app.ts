@@ -32,6 +32,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/books', booksRouter);
 
+// add error handler middleware after declaration of routes
 app.use(logErrors);
 app.use(clientErrorHandler);
 
